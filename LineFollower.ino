@@ -15,16 +15,18 @@
 // Motor B
 #define enableB 6 
 
-// Customization: adjustable speeds via variables for better control
-int fastSpeed = 255;      // Max speed for straight lines
-int mediumSpeed = 180;    // Moderate speed for soft turns 
-int slowSpeed = 100;      // Low speed for sharp turns
+// Max speed for straight lines
+int fastSpeed = 255;
+// Moderate speed for soft turns      
+int mediumSpeed = 180;   
+// Low speed for sharp turns  
+int slowSpeed = 100;      
 
-// Customization: time to reverse if line lost
+// time to reverse if line lost
 unsigned long lostLineTimeout = 2000;
 unsigned long lastLineDetectedTime;
 
-// Function to set speed dynamically for both motors
+// Function to set speed for both motors
 void setMotorSpeed(int speedA, int speedB) {
   analogWrite(enableA, speedA);
   analogWrite(enableB, speedB);
@@ -51,7 +53,7 @@ void setup() {
   pinMode(enableA, OUTPUT);
   pinMode(enableB, OUTPUT);
 
-  // Customization: initial motor speed set dynamically
+  // initial motor speed set dynamically
   setMotorSpeed(fastSpeed, fastSpeed);
 
   stopMotors();
@@ -66,7 +68,7 @@ void loop() {
   int middle = digitalRead(sensorM);
   int left = digitalRead(sensorL);
 
-  // Customization: Adjustable timeout behavior when losing the line
+  // Timeoutt behavior when losing the line
   if (middle == HIGH || left == HIGH || right == HIGH) {
     // Update last time line detected
     lastLineDetectedTime = millis();
@@ -98,7 +100,7 @@ void loop() {
 
 // Function to move forward 
 void moveForward(int speed) {
-  setMotorSpeed(speed, speed);  // Customization: reuse dynamic speed function
+  setMotorSpeed(speed, speed);
   
   digitalWrite(in1, HIGH);
   digitalWrite(in2, LOW);
@@ -108,7 +110,7 @@ void moveForward(int speed) {
 
 // Function to turn left 
 void turnLeft(int speed) {
-  setMotorSpeed(speed, speed);  // Customization: reuse dynamic speed function
+  setMotorSpeed(speed, speed);
   
   // Left motor stops, right motor moves forward
   digitalWrite(in1, LOW);
@@ -119,7 +121,7 @@ void turnLeft(int speed) {
 
 // Function to turn right 
 void turnRight(int speed) {
-  setMotorSpeed(speed, speed);  // Customization: reuse dynamic speed function
+  setMotorSpeed(speed, speed); 
   
   // Right motor stops, left motor moves forward
   digitalWrite(in1, HIGH);
@@ -130,7 +132,7 @@ void turnRight(int speed) {
 
 // Function for a sharp turn 
 void sharpTurn(int speed) {
-  setMotorSpeed(speed, speed);  // Customization: reuse dynamic speed function
+  setMotorSpeed(speed, speed);
   
   // One motor moves forward, the other moves backward
   digitalWrite(in1, LOW);
@@ -141,7 +143,7 @@ void sharpTurn(int speed) {
 
 // Function to reverse and search for the line
 void reverseAndSearch() {
-  setMotorSpeed(slowSpeed, slowSpeed);  // Customization: reuse dynamic speed function
+  setMotorSpeed(slowSpeed, slowSpeed); 
 
   // Reverse both motors
   digitalWrite(in1, LOW);
@@ -159,8 +161,8 @@ void reverseAndSearch() {
 
 // Function to stop the motors
 void stopMotors() {
-  // Customization: full motor stop
-  setMotorSpeed(0, 0);  // Use dynamic speed function to stop motors
+  // full motor stop
+  setMotorSpeed(0, 0);
   
   digitalWrite(in1, LOW);
   digitalWrite(in2, LOW);
