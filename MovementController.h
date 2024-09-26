@@ -9,54 +9,70 @@
 class MovementController {
   Motor motor;
   Sensor sensor;
-  PIDController pid;  // Instantiate the PID controller
-  const float setpoint = 1.0; // Target position for the line
+  PIDController pid;
+  // Target position for the linee
+  const float setpoint = 1.0; 
   unsigned long lastLineDetectedTime;
 
 public:
-  MovementController() : pid(1.0, 0.1, 0.05) { // Initialize PID with tuning parameters
+  MovementController() : pid(KP, KI, KD) {
     lastLineDetectedTime = millis();
   }
 
   void update() {
-    float position = getLinePosition(); // Get the position of the line (can be 0, 1, 2, ... for left, center, right)
-    
-    // Check if the line is detected
+    // Get kine position 
+    float position = getLinePosition(); 
+
     if (position >= 0) {
       lastLineDetectedTime = millis();
-      float pidOutput = pid.compute(setpoint, position); // Calculate PID output
+      float pidOutput = pid.compute(setpoint, position);
 
-      // Adjust speeds based on PID output
-      int baseSpeed = FAST_SPEED; // Base speed for moving forward
-      int leftMotorSpeed = baseSpeed - pidOutput; // Adjust left motor speed
-      int rightMotorSpeed = baseSpeed + pidOutput; // Adjust right motor speed
+      // speed control based on position
+      int baseSpeed = FAST_SPEED; 
+      int leftMotorSpeed = baseSpeed - pidOutput;
+      int rightMotorSpeed = baseSpeed + pidOutput;
+
+      // Adjust speed based on proximity to corners
+      if (position == 0.0 || position == 2.0) { 
+        // edges (corners)
+        leftMotorSpeed = CORNER_SPEED;
+        rightMotorSpeed = CORNER_SPEED;
+      } else if (position == 1.0) { 
+        // Center position
+        leftMotorSpeed = FAST_SPEED;
+        rightMotorSpeed = FAST_SPEED;
+      }
 
       // Clamp motor speeds to valid range
       leftMotorSpeed = constrain(leftMotorSpeed, 0, 255);
       rightMotorSpeed = constrain(rightMotorSpeed, 0, 255);
 
-      motor.setSpeed(leftMotorSpeed, rightMotorSpeed); // Set motor speeds
+      motor.setSpeed(leftMotorSpeed, rightMotorSpeed);
     } else {
-      // If the line is lost, initiate the search
+      // If the line is lost, initiate recovery
       if (millis() - lastLineDetectedTime > LOST_LINE_TIMEOUT) {
-        motor.quickSearch(); // Efficient search with differential speed
+        motor.reverse(); 
+        delay(300); 
+        motor.quickSearch(); 
       }
     }
   }
 
 private:
   float getLinePosition() {
-    // Implement logic to determine the position of the line based on sensor readings
-    // For example, return 0 for left, 1 for center, and 2 for right, or any other scale based on your sensors.
     if (sensor.isMiddleActive()) {
-      return 1.0; // Center position
+      // Center position
+      return 1.0; 
     } else if (sensor.isLeftActive()) {
-      return 0.0; // Left position
+      // Left position
+      return 0.0; 
     } else if (sensor.isRightActive()) {
-      return 2.0; // Right position
+      // Right position
+      return 2.0; 
     }
-    return -1.0; // Line not detected
+    // Line not detected
+    return -1.0; 
   }
 };
 
-#endif // MOVEMENT_CONTROLLER_H
+#endif 
