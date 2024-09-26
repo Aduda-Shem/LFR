@@ -1,6 +1,6 @@
-# Line-Following Robot
+# LFR
 
-This project is a simple line-following robot using an Arduino. It reads from three sensors (left, middle, and right) to detect the position of a black line on the ground. Depending on the sensor input, the robot adjusts its motor control to follow the line. If the robot loses the line, it enters a recovery mode to search for the line.
+This project is an LFR using an Arduino. It reads from three sensors (left, middle, and right) to detect the position of a black line on the ground. Depending on the sensor input, the robot adjusts its motor control to follow the line. If the robot loses the line, it enters a recovery mode to search for the line.
 
 ## Features
 
