@@ -4,11 +4,11 @@ This project is an LFR using an Arduino. It reads from three sensors (left, midd
 
 ## Features
 
-- **Straight Movement**: The robot moves forward when the middle sensor detects the line.
-- **Soft Turns**: The robot makes soft turns when the left or right sensors detect the line.
-- **Sharp Turns**: The robot makes sharp turns if both the left and right sensors detect the line simultaneously.
-- **Line Recovery**: If the robot loses the line for more than 2 seconds, it reverses and searches for the line again.
-  
+- **Straight Movement**: Moves forward when the middle sensor detects the line.
+- **Soft Turns**: Turns softly based on left or right sensor input.
+- **Sharp Turns**: Makes sharp turns when both left and right sensors detect the line.
+- **Line Recovery**: If no line is detected for 2 seconds, it reverses to search for the line.
+
 ## Components
 
 - **Sensors**: 
@@ -20,42 +20,33 @@ This project is an LFR using an Arduino. It reads from three sensors (left, midd
 
 ## Motor Speed Control
 
-- **Fast Speed**: Used for straight-line movement (`255` PWM)
-- **Medium Speed**: Used for soft turns (`180` PWM)
-- **Slow Speed**: Used for sharp turns or line recovery (`100` PWM)
+- **Fast Speed**: Straight movement (`255` PWM)
+- **Medium Speed**: Soft turns (`180` PWM)
+- **Slow Speed**: Sharp turns or recovery (`100` PWM)
 
 ## Code Structure
 
 1. **Initialization**:
-    - Sensors are initialized as input pins.
-    - Motor control pins are set as output.
-    - Motors are initially stopped.
+    - Set sensor pins as input.
+    - Set motor pins as output and stop motors.
 
 2. **Main Loop**:
-    - The robot reads sensor values continuously.
-    - Based on the sensor input, the robot moves forward, makes turns, or initiates line recovery.
-    
-3. **Line Following**:
-    - **Move Forward**: If the middle sensor detects the line.
-    - **Turn Left**: If only the left sensor detects the line.
-    - **Turn Right**: If only the right sensor detects the line.
-    - **Sharp Turn**: If both left and right sensors detect the line.
+    - Continuously read sensor values to control movement.
 
-4. **Line Recovery**:
-    - If no sensor detects the line for more than 2 seconds, the robot reverses and searches for the line.
+3. **Line Following Logic**:
+    - **Forward**: Middle sensor detects line.
+    - **Left Turn**: Only left sensor detects line.
+    - **Right Turn**: Only right sensor detects line.
+    - **Sharp Turn**: Both left and right sensors detect line.
+
+4. **Recovery Mode**:
+    - If no line detected for 2 seconds, reverse to search for the line.
 
 ## Functions
 
-- **moveForward(speed)**: Moves the robot forward with the specified speed.
-- **turnLeft(speed)**: Makes a soft left turn.
-- **turnRight(speed)**: Makes a soft right turn.
-- **sharpTurn(speed)**: Makes a sharp turn.
-- **reverseAndSearch()**: Reverses the robot and attempts to find the line again.
-- **stopMotors()**: Stops the robot by disabling all motor outputs.
-
-## Usage
-
-1. Upload the code to your Arduino board.
-2. Connect the sensors and motors to the specified pins.
-3. Place the robot on a surface with a clear black line for the sensors to detect.
-4. Power the robot, and it will begin to follow the line.
+- **moveForward(speed)**: Moves forward at specified speed.
+- **turnLeft(speed)**: Executes a soft left turn.
+- **turnRight(speed)**: Executes a soft right turn.
+- **sharpTurn(speed)**: Executes a sharp turn.
+- **reverseAndSearch()**: Reverses to find the line.
+- **stopMotors()**: Stops all motors.
